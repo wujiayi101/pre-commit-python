@@ -1,0 +1,97 @@
+exclude: (package.*\.json|poetry.lock)
+default_stages: [commit]
+repos:
+  # basic hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: check-merge-conflict
+      - id: check-json
+      - id: check-xml
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: pretty-format-json
+        args:
+          - --autofix
+      - id: trailing-whitespace
+        args:
+          - --markdown-linebreak-ext=md
+
+  # hooks to fix syntaxes
+  - repo: local
+    hooks:
+      - id: pyupgrade
+        name: pyupgrade
+        entry: poetry run pyupgrade
+        language: system
+        files: \.py$
+        args:
+          - --py39-plus
+        pass_filenames: true
+        require_serial: true
+        always_run: false
+
+  # hooks to autoformat code
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: poetry run black
+        language: system
+        files: \.py$
+        # Only apply black to files that's staged
+        pass_filenames: true
+        require_serial: true
+        always_run: false
+
+  # hooks to autosort imports
+  - repo: local
+    hooks:
+      - id: isort
+        name: isort
+        entry: poetry run isort
+        language: system
+        files: \.py$
+        # Only apply isort to files that's staged
+        pass_filenames: true
+        require_serial: true
+        always_run: false
+
+  # hooks to run pylint
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: poetry run pylint
+        language: system
+        files: \.py$
+        # Only lint files that's staged
+        pass_filenames: true
+        require_serial: true
+        always_run: false
+
+  # hooks to run pyright
+  - repo: local
+    hooks:
+      - id: pyright
+        name: pyright
+        entry: poetry run npx pyright
+        language: system
+        files: \.py$
+        # Only lint files that's staged
+        pass_filenames: true
+        require_serial: true
+        always_run: false
+
+  # hook to run pytest
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: poetry run pytest
+        language: system
+        # pytest should always run all the tests on push
+        stages: [push]
+        pass_filenames: false
+        require_serial: true
+        always_run: true
