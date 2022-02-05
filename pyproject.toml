@@ -8,6 +8,7 @@ authors = ["wujiayi <wujiayi.chris@gmail.com>"]
 python = "^3.10"
 pre-commit = "^2.17.0"
 pyright = "^0.0.13"
+pyupgrade = "^2.31.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
